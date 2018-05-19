@@ -1,77 +1,104 @@
 'use strict';
 
-var path = require('path');
-var gutil = require('gulp-util');
-var PluginError = gutil.PluginError;
-var File = gutil.File;
-var through = require('through2');
-var archiver = require('archiver');
-var concatStream = require('concat-stream');
+let path = require('path');
+let gutil = require('gulp-util');
+let PluginError = gutil.PluginError;
+let File = gutil.File;
+let through = require('through2');
+let Archiver = require('archiver');
+let fs = require('fs');
+let concatStream = require("concat-stream")
 
-module.exports = function (file, opts) {
-    if (!file) {
-        throw new PluginError('gulp-archiver', 'Missing file option for gulp-archiver');
-    }
-    opts = opts || {};
+let archiver = function(type, opts, taskEndCb){
+	opts = opts || {};
 
-    var firstFile,
-        fileName,
-        archiveType;
+	if(!type || ["zip", "tar", "tar.gz"].indexOf(type) === -1)
+		throw new PluginError('gulp-archiver', 'Unsupported archive type for gulp-archiver');
 
-    if (typeof file === 'string' && file !== '') {
-        fileName = file;
-    } else if (typeof file.path === 'string') {
-        fileName = path.basename(file.path);
-    } else {
-        throw new PluginError('gulp-archiver', 'Missing path in file options for gulp-archiver');
-    }
+	let archive = new Archiver(type, opts);
+	let firstFile;
 
-    var matches = fileName.match(/\.(zip|tar)$|\.(tar).gz$/);
-    if (matches !== null) {
-        archiveType = matches[1] || matches[2];
-    } else {
-        throw new PluginError('gulp-archiver', 'Unsupported archive type for gulp-archiver');
-    }
+	this.add = dest => {
+		//add file to pending, then if pending is 0, call triggerAdd()
+		if (!dest) dest = "";
+		dest += "/";
 
-    var archive = archiver.create(archiveType, opts);
+		return through.obj(function(file, encoding, callback){
+			if(file.isStream()){
+				this.emit('error', new PluginError('gulp-archiver',  'Streaming not supported'));
+				callback();
+				return;
+			}
+			
+			if(!firstFile) firstFile = file;
 
-    return through.obj(function(file, enc, cb) {
-        if (file.isStream()) {
-            this.emit('error', new PluginError('gulp-archiver',  'Streaming not supported'));
-            cb();
-            return;
-        }
+			if(file.isDirectory()){
+				archive.directory(file.path, {name: dest + file.relative});
+			}else
+				archive.append(file.contents, {name: dest + file.relative});
 
-        if (!firstFile) {
-            firstFile = file;
-        }
+			if(taskEndCb)
+				callback(null); //don't return file to stream, because we are going to replace it with the zip file
+			else
+				callback(null, file);
+		}, function(callback){
+			if(taskEndCb){
+				taskEndCb.call(this, callback); //pass vinyl stream to task, along with the "done" callback
+			}else
+				callback();
+		});
+	}
 
-        // Add to archive
-        if (file.isNull()) { // directories or file with empty .contents field
-            if (file.relative.length) {
-                archive.file(file.path, {name: file.relative});
-            }
-        } else {
-            archive.append(file.contents, {name: file.relative});
-        }
+	this.close = function(fileOut, vinyl)  {
+		//writes directly to file, or returns vinyl stream.
+		if(!fileOut) fileOut = "a.zip";
 
-        cb();
-    }, function(cb) {
-        if (!firstFile) {
-            cb();
-            return;
-        }
+		return new Promise(resolve => {
 
-        archive.finalize();
-        archive.pipe(concatStream(function(data) {
-            this.push(new File({
-                cwd: firstFile.cwd,
-                base: firstFile.base,
-                path: path.join(firstFile.base, fileName),
-                contents: data
-            }));
+			archive.finalize().then(() => {
+				if(vinyl){
+					archive.pipe(concatStream(data => {
+						this.push(new File({
+							cwd: firstFile.cwd,
+							base: firstFile.base,
+							path: path.join(firstFile.base, fileOut),
+							contents: data
+						}));
 
-            cb();
-        }.bind(this)));
-    });
-};
+						resolve(this);
+					}));
+				}else{
+					archive.pipe(fs.createWriteStream(fileOut));
+					resolve();
+				}
+				
+			});
+		})
+	}
+
+	return this;
+}
+
+archiver.create = function(fileOut, opts){
+	//this is a static method that acts as wrapper for the class above
+	//creates instance, exposes this.add, closes after task completion
+	let matches, type;
+
+	if(typeof fileOut === "string" && (matches = fileOut.match(/\.(zip|tar)$|\.(tar).gz$/)))
+		type = matches[1] || matches[2];
+	else
+		throw new PluginError('gulp-archiver', 'Unsupported archive type for gulp-archiver');
+
+	let archInst = new archiver(type, opts, function(done){
+		//called from inst.add() upon task completion. 
+		//here we close the archive, gather and push the vinyl stream, then call the task completion callback
+		archInst.close.call(this, fileOut, true).then(vinyl => {
+			done();
+		});
+	})
+
+	return archInst.add();
+
+}
+
+module.exports = archiver;
