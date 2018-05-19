@@ -5,9 +5,7 @@
   "author": "Alexander Biryukov <alex.biryukoff@gmail.com>",
   "repository": "fobos/gulp-archiver",
   "main": "index.js",
-  "scripts": {
-    "test": "mocha"
-  },
+  "scripts": {},
   "keywords": [
     "archive",
     "archiver",
