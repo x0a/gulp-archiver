@@ -1,11 +1,11 @@
-# gulp-archiver
-Archive anything through gulp. 
+# gulp-archiver2
+Archive anything through gulp. Based on [gulp-archiver](https://github.com/fobos/gulp-archiver), with the added ability to use archives persistent across tasks.
 
 ## Usage
 
 ```js
 var gulp = require('gulp');
-var Archiver = require('gulp-archiver');
+var Archiver = require('gulp-archiver2');
 
 gulp.task('default', function () {
 	return gulp.src('src/**')
@@ -17,34 +17,34 @@ gulp.task('default', function () {
 
 ```js
 var gulp = require('gulp');
-var Archiver = require('gulp-archiver');
+var Archiver = require('gulp-archiver2');
 var archive = new Archiver("zip")
 
 
 
 gulp.task("css", () => {
 	return gulp.src("src/*.css")
-	.pipe(archive.add()) //add to the root of the zip
+		.pipe(archive.add()) //add to the root of the zip
 })
 
 gulp.task("lib", () => {
 	return gulp.src("lib/**")
-	.pipe(archive.add("lib/")) //add to lib/ folder inside zip
+		.pipe(archive.add("lib/")) //add to lib/ folder inside zip
 })
 
 gulp.task("js", () => {
 	return gulp.src("src/*.js")
-	.pipe(archive.add()) //add to root
+		.pipe(archive.add()) //add to root
 })
 
 gulp.task("img", () => {
-    return gulp.src("media/**")
-    .pipe(archive.add("resources/img/")) 
+	return gulp.src("media/**")
+		.pipe(archive.add("resources/img/")) 
 });
 
 gulp.task("done", (cb) => {
-	archive.close("out.zip")
-	.pipe(gulp.dest("dist/"))
+	return archive.close("out.zip")
+		.pipe(gulp.dest("dist/"))
 });
 
 //Runs css, js, and HTML tasks in series, then runs "done"
