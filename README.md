@@ -1,5 +1,5 @@
 # gulp-archiver
-Archive anything through gulp
+Archive anything through gulp. 
 
 ## Usage
 
@@ -18,33 +18,33 @@ gulp.task('default', function () {
 ```js
 var gulp = require('gulp');
 var Archiver = require('gulp-archiver');
-var package = new Archiver("zip")
+var archive = new Archiver("zip")
 
-gulp.task("lib", () => {
-	return gulp.src("lib/**")
-	.pipe(package.add("lib/")) //add to lib/ folder inside zip
-})
+
 
 gulp.task("css", () => {
 	return gulp.src("src/*.css")
-	//.pipe(minifyCSS())
-	.pipe(package.add())
+	.pipe(archive.add()) //add to the root of the zip
+})
+
+gulp.task("lib", () => {
+	return gulp.src("lib/**")
+	.pipe(archive.add("lib/")) //add to lib/ folder inside zip
 })
 
 gulp.task("js", () => {
 	return gulp.src("src/*.js")
-	//.pipe(minifyJS())
-	.pipe(package.add())
+	.pipe(archive.add()) //add to root
 })
 
 gulp.task("img", () => {
     return gulp.src("media/**")
-    //.pipe(compressJPG())
-    .pipe(package.add("resources/img/"))
+    .pipe(archive.add("resources/img/")) 
 });
 
 gulp.task("done", (cb) => {
-    package.close("dist/out.zip").then(cb);
+	archive.close("out.zip")
+	.pipe(gulp.dest("dist/"))
 });
 
 //Runs css, js, and HTML tasks in series, then runs "done"
@@ -55,7 +55,13 @@ Plugin uses [archiver](https://www.npmjs.org/package/archiver) npm package to ma
 
 ## API
 
-### new archiver(type[, options])
+### `archiver.create(fileOut[, options])
+
+Collects files, pushes them to a new archive, then outputs a single archive to the stream, which can then be piped to `gulp.dest`
+
+### `new archiver(type[, options])`
+
+Creates a persistent archive that can be used across tasks
 
 #### type
 
@@ -71,7 +77,9 @@ Type: `Object`
 Described in original [archiver](https://github.com/archiverjs/node-archiver#zip) repository
 
 
-### archive.add(dest)
+### `archive.add(dest)`
+
+Accepts files/folders and adds them to the archive
 
 #### dest
 
@@ -79,7 +87,9 @@ Type: `String`
 
 Destination within compressed file. If left empty, files will be placed at the root of the file.
 
-### archive.close(filename)
+### `archive.close(filename)`
+
+Closes archive and returns a Readable, which can be piped to `gulp.dest`
 
 #### filename
 
