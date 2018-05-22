@@ -34,7 +34,7 @@ gulp.task("lib", () => {
 
 gulp.task("js", () => {
 	return gulp.src("src/*.js")
-		.pipe(archive.add()) //add to root
+		.pipe(archive.add()) 
 })
 
 gulp.task("img", () => {
@@ -42,13 +42,17 @@ gulp.task("img", () => {
 		.pipe(archive.add("resources/img/")) 
 });
 
-gulp.task("done", (cb) => {
+gulp.task("done", () => {
 	return archive.close("out.zip")
 		.pipe(gulp.dest("dist/"))
 });
 
-//Runs css, js, and HTML tasks in series, then runs "done"
-gulp.task('default', gulp.series(gulp.parallel("lib", "css", "js", "img"), "done"));
+// Can handle files being added simultanously through parallel tasks
+gulp.task('default', 
+	gulp.series(
+		gulp.parallel("lib", "css", "js", "img"), 
+		"done")
+);
 ```
 
 Plugin uses [archiver](https://www.npmjs.org/package/archiver) npm package to make archive. 
