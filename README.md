@@ -1,5 +1,5 @@
 # gulp-archiver2
-Archive anything through gulp. Based on [gulp-archiver](https://github.com/fobos/gulp-archiver), with the added ability to use archives persistent across tasks.
+Archive anything through gulp. Based on [gulp-archiver](https://github.com/fobos/gulp-archiver), with the added ability to use archives persistently across tasks.
 
 ## Usage
 
@@ -51,7 +51,8 @@ gulp.task("done", () => {
 gulp.task('default', 
 	gulp.series(
 		gulp.parallel("lib", "css", "js", "img"), 
-		"done")
+		"done"
+	)
 );
 ```
 
