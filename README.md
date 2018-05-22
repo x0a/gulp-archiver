@@ -72,11 +72,9 @@ Type: `Object`
 
 Described in original [archiver](https://github.com/archiverjs/node-archiver#zip) repository
 
+<hr/>
 
-
-
-
-### `new archiver(type[, options])`
+### let instance = `new archiver(type[, options])`
 
 Creates a persistent archive that can be used across tasks
 
@@ -94,7 +92,7 @@ Type: `Object`
 Described in original [archiver](https://github.com/archiverjs/node-archiver#zip) repository
 
 
-### `archive.add(dest)`
+### instance`.add([dest])`
 
 Accepts files/folders and adds them to the archive
 
@@ -102,14 +100,15 @@ Accepts files/folders and adds them to the archive
 
 Type: `String`
 
-Destination within compressed file. If left empty, files will be placed at the root of the file.
+Destination within the archive. If left empty, files will be placed at the root of the file.
 
-### `archive.close(filename)`
+### instance`.close(filename)`
 
 Closes archive and returns a Readable, which can be piped to `gulp.dest`
 
 #### filename
 
+*Required*
 Type: `String`
 
 Filename to output file to.
