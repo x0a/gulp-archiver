@@ -1,9 +1,9 @@
 {
-  "name": "gulp-archiver",
-  "version": "1.0.0",
+  "name": "gulp-archiver2",
+  "version": "1.1.0",
   "description": "Archive anything through gulp",
   "author": "Alexander Biryukov <alex.biryukoff@gmail.com>",
-  "repository": "fobos/gulp-archiver",
+  "repository": "x0a/gulp-archiver",
   "main": "index.js",
   "scripts": {},
   "keywords": [
@@ -15,13 +15,16 @@
   ],
   "dependencies": {
     "archiver": "^2.1.1",
-    "concat-stream": "^1.5.0",
-    "gulp-util": "^3.0.5",
-    "through2": "^0.6.5"
+    "concat-stream": "^1.6.2",
+    "plugin-error": "^1.0.1",
+    "through2": "^2.0.3",
+    "to-through": "^2.0.0",
+    "vinyl": "^2.1.0"
   },
   "devDependencies": {
     "decompress-unzip": "^3.2.2",
-    "gulp": "^3.9.0",
+    "gulp": "^4.0.0",
+    "merge-stream": "^1.0.1",
     "mocha": "^2.2.5",
     "should": "^7.0.1",
     "stream-assert": "^2.0.2",
