@@ -74,6 +74,8 @@ Described in original [archiver](https://github.com/archiverjs/node-archiver#zip
 
 
 
+
+
 ### `new archiver(type[, options])`
 
 Creates a persistent archive that can be used across tasks
@@ -92,10 +94,7 @@ Type: `Object`
 Described in original [archiver](https://github.com/archiverjs/node-archiver#zip) repository
 
 
-### 
-```js
-	archive.add(dest)
-```
+### `archive.add(dest)`
 
 Accepts files/folders and adds them to the archive
 
