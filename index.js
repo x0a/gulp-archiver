@@ -4,7 +4,6 @@ let path = require("path");
 let through = require("through2");
 let fs = require("fs");
 let concatStream = require("concat-stream");
-let tothrough = require("to-through");
 let Archiver = require("archiver");
 let PluginError = require("plugin-error");
 let Vinyl = require("vinyl");
