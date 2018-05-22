@@ -55,7 +55,7 @@ Plugin uses [archiver](https://www.npmjs.org/package/archiver) npm package to ma
 
 ## API
 
-### `archiver.create(fileOut[, options])
+### `archiver.create(fileOut[, options])`
 
 Collects files, pushes them to a new archive, then outputs a single archive to the stream, which can then be piped to `gulp.dest`
 
