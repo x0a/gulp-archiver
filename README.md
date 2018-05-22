@@ -57,7 +57,22 @@ Plugin uses [archiver](https://www.npmjs.org/package/archiver) npm package to ma
 
 ### `archiver.create(fileOut[, options])`
 
-Collects files, pushes them to a new archive, then outputs a single archive to the stream, which can then be piped to `gulp.dest`
+Takes files and produces a single archive.
+
+#### fileOut
+
+*Required*
+Type: `String`
+
+File name for the resulting archive. Plugin supports only `zip` and `tar` archives.
+
+#### options
+
+Type: `Object`
+
+Described in original [archiver](https://github.com/archiverjs/node-archiver#zip) repository
+
+
 
 ### `new archiver(type[, options])`
 
