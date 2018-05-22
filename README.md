@@ -92,7 +92,10 @@ Type: `Object`
 Described in original [archiver](https://github.com/archiverjs/node-archiver#zip) repository
 
 
-### `archive.add(dest)`
+### 
+```js
+	archive.add(dest)
+```
 
 Accepts files/folders and adds them to the archive
 
