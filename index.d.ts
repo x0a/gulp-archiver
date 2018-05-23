@@ -22,7 +22,7 @@ declare class Archiver {
 	 * @param path  Path within archive to place files
 	 * @returns     A stream that receives Vinyl files and pushes them into the archive
 	 */
-	add(path: string): Transform;
+	add(path?: string): Transform;
 	/**
 	 * @param filename File name for the created archive
 	 * @returns     A readable stream containing only the created archive
