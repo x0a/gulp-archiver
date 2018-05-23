@@ -1,5 +1,7 @@
 # gulp-archiver2
-Archive anything through gulp. Based on [gulp-archiver](https://github.com/fobos/gulp-archiver), with the added ability to use archives persistently across tasks.
+Archive anything through gulp. Based on [gulp-archiver](https://www.npmjs.com/package/gulp-archiver), with the added ability to use archives persistently across tasks.
+
+Thanks to @Fobos for his work on the original [gulp-archiver](https://github.com/fobos/gulp-archiver)
 
 ## Usage
 
@@ -8,9 +10,9 @@ var gulp = require('gulp');
 var Archiver = require('gulp-archiver2');
 
 gulp.task('default', function () {
-	return gulp.src('src/**')
-		.pipe(Archiver.create('archive.zip'))
-		.pipe(gulp.dest('./dist'));
+  return gulp.src('src/**')
+    .pipe(Archiver.create('archive.zip'))
+    .pipe(gulp.dest('./dist'));
 });
 ```
 ### For persistent use across tasks
@@ -23,36 +25,36 @@ var archive = new Archiver("zip")
 
 
 gulp.task("css", () => {
-	return gulp.src("src/*.css")
-		.pipe(archive.add()) //add to the root of the zip
+  return gulp.src("src/*.css")
+    .pipe(archive.add()) //add to the root of the zip
 })
 
 gulp.task("lib", () => {
-	return gulp.src("lib/**")
-		.pipe(archive.add("lib/")) //add to lib/ folder inside zip
+  return gulp.src("lib/**")
+    .pipe(archive.add("lib/")) //add to lib/ folder inside zip
 })
 
 gulp.task("js", () => {
-	return gulp.src("src/*.js")
-		.pipe(archive.add()) 
+  return gulp.src("src/*.js")
+    .pipe(archive.add()) 
 })
 
 gulp.task("img", () => {
-	return gulp.src("media/**")
-		.pipe(archive.add("resources/img/")) 
+  return gulp.src("media/**")
+    .pipe(archive.add("resources/img/")) 
 });
 
 gulp.task("done", () => {
-	return archive.close("out.zip")
-		.pipe(gulp.dest("dist/"))
+  return archive.close("out.zip")
+    .pipe(gulp.dest("dist/"))
 });
 
 // Can handle files being added simultanously through parallel tasks
 gulp.task('default', 
-	gulp.series(
-		gulp.parallel("lib", "css", "js", "img"), 
-		"done"
-	)
+  gulp.series(
+    gulp.parallel("lib", "css", "js", "img"), 
+    "done"
+  )
 );
 ```
 
