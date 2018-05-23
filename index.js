@@ -8,18 +8,20 @@ let Archiver = require("archiver");
 let PluginError = require("plugin-error");
 let Vinyl = require("vinyl");
 
-let archiver = function(type, opts){
+let archiver = function (type, opts) {
 	opts = opts || {};
 
-	if(!type || ["zip", "tar", "tar.gz"].indexOf(type) === -1)
+	if (!type || ["zip", "tar", "tar.gz"].indexOf(type) === -1)
 		throw new PluginError("gulp-archiver", "Unsupported archive type for gulp-archiver");
 
 	let archive = new Archiver(type, opts);
 	let firstFile;
 	let self = this;
 
-	let close = function(cb){
-		archive.finalize().then(() => 
+	let close = function (cb) {
+		if(!firstFile) return cb();
+
+		archive.finalize().then(() =>
 			archive.pipe(concatStream(data => {
 				//add our new archive to the stream
 				this.push(new Vinyl({
@@ -33,46 +35,44 @@ let archiver = function(type, opts){
 			}))
 		);
 	}
-	
+
 	this.add = (dest, closeAfter) => {
 		//add file to pending, then if pending is 0, call triggerAdd()
 		if (!dest) dest = "";
 		dest = path.join(dest, "/")
 
-		return through.obj(function(file, encoding, cb){
-			if(file.isStream()){
-				this.emit("error", new PluginError("gulp-archiver",  "Streaming not supported"));
+		return through.obj(function (file, encoding, cb) {
+			if (file.isStream()) {
+				this.emit("error", new PluginError("gulp-archiver", "Streaming not supported"));
 				cb();
 				return;
 			}
-			
-			if(!firstFile) firstFile = file;
 
-			if(file.isDirectory())
-				archive.append(null, {name: path.join(dest, file.relative), type: "directory"})
+			if (!firstFile) firstFile = file;
+
+			if (file.isDirectory())
+				archive.append(null, { name: path.join(dest, file.relative), type: "directory" })
 			else
-				archive.append(file.contents, {name: path.join(dest, file.relative)});
+				archive.append(file.contents, { name: path.join(dest, file.relative) });
 
-			if(closeAfter)
+			if (closeAfter)
 				cb(null); //don't return file to stream, because we are going to replace it with the archive
 			else
 				cb(null, file);
-		}, function(cb){
-			if(closeAfter)
+		}, function (cb) {
+			if (closeAfter)
 				close.call(this, cb);
 			else
 				cb();
 		});
 	}
 
-	this.close = function(fileOut){
-		if(!fileOut) 
+	this.close = function (fileOut) {
+		if (!fileOut)
 			throw new PluginError("gulp-archiver", "Missing argument or invalid filename");
 		this.fileOut = fileOut;
 
 		let passthru = through.obj(); //simple pass-through stream
-
-		passthru.pause(); //give us time to add the file
 
 		close.call(passthru, () => { //add archive to stream
 			passthru.push(null); //send EOF to signal stream finished
@@ -84,18 +84,20 @@ let archiver = function(type, opts){
 	return this;
 }
 
-archiver.create = function(fileOut, opts){
+archiver.create = function (fileOut, opts) {
 	//this is a static method that acts as wrapper for the class above
 	//creates instance, exposes this.add, closes after task completion
 	let matches, type;
 
-	if(typeof fileOut === "string" && (matches = fileOut.match(/\.(zip|tar)$|\.(tar).gz$/)))
+	if (typeof fileOut === "string" && (matches = fileOut.match(/\.(zip|tar)$|\.(tar).gz$/)))
 		type = matches[1] || matches[2];
 	else
 		throw new PluginError("gulp-archiver", "Unsupported archive type for gulp-archiver");
 
 	let archInst = new archiver(type, opts);
+
 	archInst.fileOut = fileOut;
+
 	return archInst.add(null, true);
 
 }
