@@ -1,6 +1,6 @@
 {
   "name": "gulp-archiver2",
-  "version": "1.1.2",
+  "version": "1.1.1",
   "description": "Archive anything through gulp",
   "author": "x0a",
   "repository": "x0a/gulp-archiver",
@@ -11,7 +11,9 @@
     "archiver",
     "zip",
     "tar",
-    "gulp"
+    "gulp",
+    "gulpplugin",
+    "tar.gz"
   ],
   "contributors": ["Alexander Biryukov <alex.biryukoff@gmail.com>"],
   "dependencies": {
