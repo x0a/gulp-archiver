@@ -1,5 +1,7 @@
 import { WriteStream } from "tty";
 import { Transform } from "stream";
+import { ZlibOptions } from "zlib";
+
 /*
 	Thanks to Esri <https://github.com/archiverjs/node-archiver>,
 	Dolan Miu <https://github.com/dolanmiu>, and
