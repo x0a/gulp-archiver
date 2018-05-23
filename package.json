@@ -2,7 +2,7 @@
   "name": "gulp-archiver2",
   "version": "1.1.2",
   "description": "Archive anything through gulp",
-  "author": "Alexander Biryukov <alex.biryukoff@gmail.com>",
+  "author": "x0a",
   "repository": "x0a/gulp-archiver",
   "main": "index.js",
   "scripts": {},
@@ -13,6 +13,7 @@
     "tar",
     "gulp"
   ],
+  "contributors": ["Alexander Biryukov <alex.biryukoff@gmail.com>"],
   "dependencies": {
     "archiver": "^2.1.1",
     "concat-stream": "^1.6.2",
