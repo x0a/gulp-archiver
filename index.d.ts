@@ -11,13 +11,13 @@ import { ZlibOptions } from "zlib";
 	See the original at: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/archiver/index.d.ts
 
 */
-declare class Archiver {
+declare class GulpArchiver {
 	/**
 	 * @param type Type of archive to create
 	 * @param opts Options to pass to ArchiverJS
 	 */
 	
-	constructor(type: Archiver.ArchiveType, opts?: Archiver.ArchiverOptions);
+	constructor(type: GulpArchiver.ArchiveType, opts?: GulpArchiver.ArchiverOptions);
 	/**
 	 * @param path  Path within archive to place files
 	 * @returns     A stream that receives Vinyl files and pushes them into the archive
@@ -32,10 +32,10 @@ declare class Archiver {
 	 * @param filename File name for the created archive. Archive type is determined using the extension.
 	 * @returns     A readable stream containing only the created archive
 	 */
-	static create(filename: string, opts?: Archiver.ArchiverOptions): Transform;
+	static create(filename: string, opts?: GulpArchiver.ArchiverOptions): Transform;
 }
 
-declare namespace Archiver{
+declare namespace GulpArchiver{
 	type ArchiveType = "zip" | "tar" | "tar.gz";
     type ArchiverOptions = CoreOptions & TransformOptions & ZipOptions & TarOptions;
 
@@ -67,4 +67,4 @@ declare namespace Archiver{
     }
 }
 
-export = Archiver;
+export = GulpArchiver;

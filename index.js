@@ -2,17 +2,16 @@
 
 let path = require("path");
 let through = require("through2");
-let fs = require("fs");
 let concatStream = require("concat-stream");
 let Archiver = require("archiver");
 let PluginError = require("plugin-error");
 let Vinyl = require("vinyl");
 
-let archiver = function (type, opts) {
+let GulpArchiver = function (type, opts) {
 	opts = opts || {};
 
 	if (!type || ["zip", "tar", "tar.gz"].indexOf(type) === -1)
-		throw new PluginError("gulp-archiver", "Unsupported archive type for gulp-archiver");
+		throw new PluginError("gulp-archiver2", "Unsupported archive type");
 
 	let archive = new Archiver(type, opts);
 	let firstFile;
@@ -43,7 +42,7 @@ let archiver = function (type, opts) {
 
 		return through.obj(function (file, encoding, cb) {
 			if (file.isStream()) {
-				this.emit("error", new PluginError("gulp-archiver", "Streaming not supported"));
+				this.emit("error", new PluginError("gulp-archiver2", "Streaming not supported"));
 				cb();
 				return;
 			}
@@ -69,7 +68,7 @@ let archiver = function (type, opts) {
 
 	this.close = function (fileOut) {
 		if (!fileOut)
-			throw new PluginError("gulp-archiver", "Missing argument or invalid filename");
+			throw new PluginError("gulp-archiver2", "Missing argument or invalid filename");
 		this.fileOut = fileOut;
 
 		let passthru = through.obj(); //simple pass-through stream
@@ -84,7 +83,7 @@ let archiver = function (type, opts) {
 	return this;
 }
 
-archiver.create = function (fileOut, opts) {
+GulpArchiver.create = function (fileOut, opts) {
 	//this is a static method that acts as wrapper for the class above
 	//creates instance, exposes this.add, closes after task completion
 	let matches, type;
@@ -92,9 +91,9 @@ archiver.create = function (fileOut, opts) {
 	if (typeof fileOut === "string" && (matches = fileOut.match(/\.(zip|tar)$|\.(tar).gz$/)))
 		type = matches[1] || matches[2];
 	else
-		throw new PluginError("gulp-archiver", "Unsupported archive type for gulp-archiver");
+		throw new PluginError("gulp-archiver2", "Unsupported archive type for gulp-archiver");
 
-	let archInst = new archiver(type, opts);
+	let archInst = new GulpArchiver(type, opts);
 
 	archInst.fileOut = fileOut;
 
@@ -102,4 +101,4 @@ archiver.create = function (fileOut, opts) {
 
 }
 
-module.exports = archiver;
+module.exports = GulpArchiver;
