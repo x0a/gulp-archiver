@@ -22,6 +22,7 @@ let gulp = require('gulp');
 let Archiver = require('gulp-archiver2');
 let archive = new Archiver("zip")
 
+
 gulp.task("css", () => {
   return gulp.src("src/*.css")
     .pipe(archive.add()) //add to the root of the zip
@@ -60,9 +61,9 @@ Plugin uses [archiver](https://www.npmjs.org/package/archiver) npm package to ma
 
 ## API
 
-### `archiver.create(fileOut[, options])`
+### `Archiver.create(fileOut[, options])`
 
-Takes files and produces a single archive.
+Consumes files and pushes an archive to the stream
 
 #### fileOut
 
@@ -79,7 +80,7 @@ Described in original [archiver](https://github.com/archiverjs/node-archiver#zip
 
 <hr/>
 
-### let instance = `new archiver(type[, options])`
+### let instance = `new Archiver(type[, options])`
 
 Creates a persistent archive that can be used across tasks
 
@@ -88,7 +89,7 @@ Creates a persistent archive that can be used across tasks
 *Required*
 Type: `String`
 
-File extension is used to define archive type. Plugin supports only `zip` and `tar` archives.
+File extension is used to define archive type. Can be `"zip"`, `"tar"`, or `"tar.gz"`
 
 #### options
 
