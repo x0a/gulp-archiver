@@ -6,8 +6,8 @@ Thanks to @Fobos for his work on the original [gulp-archiver](https://github.com
 ## Usage
 
 ```js
-var gulp = require('gulp');
-var Archiver = require('gulp-archiver2');
+let gulp = require('gulp');
+let Archiver = require('gulp-archiver2');
 
 gulp.task('default', function () {
   return gulp.src('src/**')
@@ -18,11 +18,9 @@ gulp.task('default', function () {
 ### For persistent use across tasks
 
 ```js
-var gulp = require('gulp');
-var Archiver = require('gulp-archiver2');
-var archive = new Archiver("zip")
-
-
+let gulp = require('gulp');
+let Archiver = require('gulp-archiver2');
+let archive = new Archiver("zip")
 
 gulp.task("css", () => {
   return gulp.src("src/*.css")
