@@ -70,7 +70,7 @@ Consumes files and pushes an archive to the stream
 *Required*
 Type: `String`
 
-File name for the resulting archive. Plugin supports only `zip` and `tar` archives.
+File name for the resulting archive. Must end with file extension indicating the format. Plugin supports only `zip`, `tar`, and `tar.gz` archives.
 
 #### options
 
@@ -80,16 +80,16 @@ Described in original [archiver](https://github.com/archiverjs/node-archiver#zip
 
 <hr/>
 
-### let instance = `new Archiver(type[, options])`
+### let instance = `new Archiver(format[, options])`
 
 Creates a persistent archive that can be used across tasks
 
-#### type
+#### format
 
 *Required*
 Type: `String`
 
-File extension is used to define archive type. Can be `"zip"`, `"tar"`, or `"tar.gz"`
+Type of archive to create. Can be `"zip"`, `"tar"`, `"tar.gz"`, or `"tgz"`.
 
 #### options
 
@@ -98,21 +98,21 @@ Type: `Object`
 Described in original [archiver](https://github.com/archiverjs/node-archiver#zip) repository
 
 
-### instance`.add([dest])`
+### instance`.add([path])`
 
 Accepts files/folders and adds them to the archive
 
-#### dest
+#### path
 
 Type: `String`
 
-Destination within the archive. If left empty, files will be placed at the root of the file.
+Destination within the archive to place files. If left empty, files will be placed at the root of the file.
 
-### instance`.close(filename)`
+### instance`.close(fileOut)`
 
 Closes archive and returns a Readable, which can be piped to `gulp.dest`
 
-#### filename
+#### fileOut
 
 *Required*
 Type: `String`
