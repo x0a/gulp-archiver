@@ -24,15 +24,15 @@ declare class GulpArchiver {
 	 */
 	add(path?: string): Transform;
 	/**
-	 * @param filename File name for the created archive
+	 * @param fileOut File name for the created archive
 	 * @returns     A readable stream containing only the created archive
 	 */
-	close(filename: string): ReadableStream;
+	close(fileOut: string): ReadableStream;
 	/**
-	 * @param filename File name for the created archive. Archive type is determined using the extension.
+	 * @param fileOut File name for the created archive. Archive type is determined using the extension.
 	 * @returns     A readable stream containing only the created archive
 	 */
-	static create(filename: string, opts?: GulpArchiver.ArchiverOptions): Transform;
+	static create(fileOut: string, opts?: GulpArchiver.ArchiverOptions): Transform;
 }
 
 declare namespace GulpArchiver{
