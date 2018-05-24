@@ -8,16 +8,19 @@ let PluginError = require("plugin-error");
 let Vinyl = require("vinyl");
 
 let GulpArchiver = function (format, opts) {
-	opts = opts || {};
+	let supported = ["zip", "tar", "tar.gz", "tgz"];
+	let found = -1;
 
-	if (!format || ["zip", "tar", "tar.gz", "tgz"].indexOf(format) === -1)
+	if (!format || (found = supported.indexOf(format)) === -1)
 		throw new PluginError("gulp-archiver2", "Unsupported archive format");
 
 	//If they want a compressed tarball, the archiver considers that a regular tarball.. with compression added
-	if(["tar.gz", "tgz"].indexOf(format) !== -1){
+	if(found > 1){
 		format = "tar";
 		opts.gzip = true;
 	}
+
+	opts = opts || {};
 
 	let archive = new Archiver(format, opts);
 	let firstFile;
