@@ -7,13 +7,19 @@ let Archiver = require("archiver");
 let PluginError = require("plugin-error");
 let Vinyl = require("vinyl");
 
-let GulpArchiver = function (type, opts) {
+let GulpArchiver = function (format, opts) {
 	opts = opts || {};
 
-	if (!type || ["zip", "tar", "tar.gz"].indexOf(type) === -1)
-		throw new PluginError("gulp-archiver2", "Unsupported archive type");
+	if (!format || ["zip", "tar", "tar.gz", "tgz"].indexOf(format) === -1)
+		throw new PluginError("gulp-archiver2", "Unsupported archive format");
 
-	let archive = new Archiver(type, opts);
+	//If they want a compressed tarball, the archiver considers that a regular tarball.. with compression added
+	if(["tar.gz", "tgz"].indexOf(format) !== -1){
+		format = "tar";
+		opts.gzip = true;
+	}
+
+	let archive = new Archiver(format, opts);
 	let firstFile;
 	let self = this;
 
@@ -86,14 +92,14 @@ let GulpArchiver = function (type, opts) {
 GulpArchiver.create = function (fileOut, opts) {
 	//this is a static method that acts as wrapper for the class above
 	//creates instance, exposes this.add, closes after task completion
-	let matches, type;
+	let matches, format;
 
-	if (typeof fileOut === "string" && (matches = fileOut.match(/\.(zip|tar)$|\.(tar).gz$/)))
-		type = matches[1] || matches[2];
+	if (typeof fileOut === "string" && (matches = fileOut.match(/\.(zip|tar|tar\.gz|tgz)$/)))
+		format = matches[1] || matches[2];
 	else
-		throw new PluginError("gulp-archiver2", "Unsupported archive type for gulp-archiver");
+		throw new PluginError("gulp-archiver2", "Unsupported archive format for gulp-archiver");
 
-	let archInst = new GulpArchiver(type, opts);
+	let archInst = new GulpArchiver(format, opts);
 
 	archInst.fileOut = fileOut;
 

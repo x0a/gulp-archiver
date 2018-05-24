@@ -17,7 +17,7 @@ declare class GulpArchiver {
 	 * @param opts Options to pass to ArchiverJS
 	 */
 	
-	constructor(type: GulpArchiver.ArchiveType, opts?: GulpArchiver.ArchiverOptions);
+	constructor(format: GulpArchiver.ArchiveFormat, opts?: GulpArchiver.ArchiverOptions);
 	/**
 	 * @param path  Path within archive to place files
 	 * @returns     A stream that receives Vinyl files and pushes them into the archive
@@ -29,14 +29,14 @@ declare class GulpArchiver {
 	 */
 	close(fileOut: string): ReadableStream;
 	/**
-	 * @param fileOut File name for the created archive. Archive type is determined using the extension.
+	 * @param fileOut File name for the created archive. Archive format is determined using the file extension.
 	 * @returns     A readable stream containing only the created archive
 	 */
 	static create(fileOut: string, opts?: GulpArchiver.ArchiverOptions): Transform;
 }
 
 declare namespace GulpArchiver{
-	type ArchiveType = "zip" | "tar" | "tar.gz";
+	type ArchiveFormat = "zip" | "tar" | "tar.gz" | "tgz";
     type ArchiverOptions = CoreOptions & TransformOptions & ZipOptions & TarOptions;
 
     interface CoreOptions {
